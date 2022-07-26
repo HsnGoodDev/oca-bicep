@@ -1,4 +1,4 @@
-//Azure Api management , ,, , Azure application insight, Azure log Analitics workspace 
+
 //필요한 디펜던시 
 @description('name of service owner')
 @minLength(1)
@@ -79,6 +79,23 @@ resource appsvc 'Microsoft.Web/sites@2021-03-01' = {
     httpsOnly: true
   }
 }
+//Azure log Analitics workspace 
+resource wrkAnal 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
+  name :'wrkAnal-${name}-${loc}'
+  location : location
+}
+//Azure application insight
+resource appInsight 'Microsoft.Insights/components@2020-02-02' = {
+  name :'appInsight-${name}-${loc}'
+  location : location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: wrkAnal.id
+  }
+}
+
+
 
 output rn string = rg
 
